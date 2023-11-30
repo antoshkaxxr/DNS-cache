@@ -14,3 +14,4 @@ class ResourceRecord:
         self.TTL = ttl
         self.RDLENGTH = rdlength
         self.RDATA = rdata
+
