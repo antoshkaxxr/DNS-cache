@@ -7,9 +7,9 @@
 # RDATA - строка переменного размера, описывающая ресурс
 
 class ResourceRecord:
-    def __init__(self, name, type, _class, ttl, rdlength, rdata):
+    def __init__(self, name, _type, _class, ttl, rdlength, rdata):
         self.NAME = name
-        self.TYPE = type
+        self.TYPE = _type
         self.CLASS = _class
         self.TTL = ttl
         self.RDLENGTH = rdlength

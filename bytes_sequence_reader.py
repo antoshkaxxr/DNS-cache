@@ -1,5 +1,8 @@
 from itertools import islice
 from header_section import HeaderSection
+from question_section import QuestionSection
+from resource_record import ResourceRecord
+from message import Message
 
 
 class BytesSequenceReader:
@@ -51,8 +54,30 @@ class BytesSequenceReader:
         return counts
 
     def read_header_section(self):
-        _id = self.read_certain_size(2)
+        _id = self.convert_to_int(self.read_certain_size(2))
         codes = self.read_certain_size(2)
         counts = self.read_counts()
         return HeaderSection(_id, codes, *counts)
 
+    def read_question_section(self):
+        qname = self.read_name()
+        qtype = self.read_certain_size(2)
+        qclass = self.read_certain_size(2)
+        return QuestionSection(qname, qtype, qclass)
+
+    def read_resource_record(self):
+        name = self.read_name()
+        _type = self.convert_to_int(self.read_certain_size(2))
+        _class = self.read_certain_size(2)
+        ttl = self.convert_to_int(self.read_certain_size(4))
+        rdlength = self.convert_to_int(self.read_certain_size(2))
+        rdata = self.read_certain_size(rdlength)
+        return ResourceRecord(name, _type, _class, ttl, rdlength, rdata)
+
+    def read_message(self):
+        header = self.read_header_section()
+        question = [self.read_question_section() for _ in range(header.QDCOUNT)]
+        answer = [self.read_resource_record() for _ in range(header.ANCOUNT)]
+        authority = [self.read_resource_record() for _ in range(header.NSCOUNT)]
+        additional = [self.read_resource_record() for _ in range(header.ARCOUNT)]
+        return Message(header, question, answer, authority, additional)
