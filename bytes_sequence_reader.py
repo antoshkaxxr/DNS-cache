@@ -68,7 +68,7 @@ class BytesSequenceReader:
     def read_resource_record(self):
         name = self.read_name()
         _type = self.convert_to_int(self.read_certain_size(2))
-        _class = self.read_certain_size(2)
+        _class = self.convert_to_int(self.read_certain_size(2))
         ttl = self.convert_to_int(self.read_certain_size(4))
         rdlength = self.convert_to_int(self.read_certain_size(2))
         rdata = self.read_certain_size(rdlength)

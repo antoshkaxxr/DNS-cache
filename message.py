@@ -21,4 +21,3 @@ class Message:
 
     def req_to_bytearray(self):
         return self.pack_header_and_question_sections(self.header.FLAGS)
-
